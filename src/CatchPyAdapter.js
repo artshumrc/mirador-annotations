@@ -18,10 +18,9 @@ export default class CatchPyAdapter {
     get annotationPageId() {
       return `${this.endpointUrl}/pages?uri=${this.canvasId}`;
     }
-  
-    async create(annotation) {
-      console.log(annotation);
-      let payload = {
+
+    createPayload(annotation){
+      return {
         "id": annotation.id,
         "@context": this.context,
         "type": "Annotation",
@@ -65,8 +64,12 @@ export default class CatchPyAdapter {
           ]
         }
       };
+    }
+  
+    async create(annotation) {
+      console.log(annotation);
       return fetch(`${this.endpointUrl}/annos/`, {
-        body: JSON.stringify(payload),
+        body: JSON.stringify(this.createPayload(annotation)),
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -79,25 +82,19 @@ export default class CatchPyAdapter {
       .catch(() => this.all());
     }
   
-    /**
     async update(annotation) {
-      return fetch(`${this.endpointUrl}/${encodeURIComponent(annotation.id)}`, {
-        body: JSON.stringify({
-          annotation: {
-            data: JSON.stringify(annotation),
-            uuid: annotation.id,
-          },
-        }),
+      return fetch(`${this.endpointUrl}/annos/${encodeURIComponent(annotation.id)}`, {
+        body: JSON.stringify(this.createPayload(annotation)),
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': `Token ${this.jwt}`
         },
-        method: 'PATCH',
+        method: 'PUT',
       })
         .then((response) => this.all())
         .catch(() => this.all());
     }
-    **/
   
     async delete(annoId) {
       return fetch(`${this.endpointUrl}/annos/${encodeURIComponent(annoId)}`, {
