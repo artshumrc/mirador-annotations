@@ -112,16 +112,15 @@ export default class CatchPyAdapter {
         .catch(() => this.all());
     }
   
-    /**
     async get(annoId) {
-      return (await fetch(`${this.endpointUrl}/${encodeURIComponent(annoId)}`, {
+      return (await fetch(`${this.endpointUrl}/annos/${encodeURIComponent(annoId)}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': `Token ${this.jwt}`
         },
       })).json();
     }
-    **/
   
     async all() {
       let params = {
