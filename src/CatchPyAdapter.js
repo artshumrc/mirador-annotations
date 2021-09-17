@@ -1,11 +1,4 @@
 /** */
-function objToQueryString(obj) {
-  const keyValuePairs = [];
-  for (let i = 0; i < Object.keys(obj).length; i += 1) {
-    keyValuePairs.push(`${encodeURIComponent(Object.keys(obj)[i])}=${encodeURIComponent(Object.values(obj)[i])}`);
-  }
-  return keyValuePairs.join('&');
-}
 
 export default class CatchPyAdapter {
     /** */
@@ -106,19 +99,18 @@ export default class CatchPyAdapter {
     }
     **/
   
-    /**
     async delete(annoId) {
-      return fetch(`${this.endpointUrl}/${encodeURIComponent(annoId)}`, {
+      return fetch(`${this.endpointUrl}/annos/${encodeURIComponent(annoId)}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          'Authorization': `Token ${this.jwt}`
         },
         method: 'DELETE',
       })
         .then((response) => this.all())
         .catch(() => this.all());
     }
-    **/
   
     /**
     async get(annoId) {
@@ -137,15 +129,11 @@ export default class CatchPyAdapter {
         "source_id": this.canvasId,
         "platform": this.platformName
       }
-      let query = new URLSearchParams();
+      let queryString = '';
       for(let key in params){
-        if(!params.hasOwnProperty())continue
-        query.append(key, params[key])
-      };
-      let queryString = query.toString();
-      console.log(queryString);
-
-      const res = await fetch(`${this.endpointUrl}/annos/${queryString}`, {
+        queryString += `&${key}=${params[key]}`;
+      }
+      const res = await fetch(`${this.endpointUrl}/annos/?${queryString}`, {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
@@ -155,29 +143,12 @@ export default class CatchPyAdapter {
       });
       let annos = await res.json();
       return this.createAnnotationPage(annos);
-      // .then((response) => {
-      //   let annos = response.json();
-      //   console.log(annos);
-      //   return {
-      //     "id": "",
-      //     "items": annos.rows,
-      //     "type": "AnnotationPage"
-      //   }
-      // });
-      // console.log(annos);
-      // return {
-      //   "id":"",
-      //   "items": annos.rows,
-      //   "type": "AnnotationPage"
-      // }
-      // return (await fetch(this.annotationPageId)).json();
     }
 
+    // TODO: match this to schema better
     formatAnnotation(item){
-      console.log(item);
       let bound = null;
       item.target.items.forEach((b) => {
-        console.log(b)
         if(b.type == "Image"){
             bound = b;
         }
@@ -199,13 +170,9 @@ export default class CatchPyAdapter {
 
     /** Creates an AnnotationPage from a list of annotations */
     createAnnotationPage(annos) {
-      console.log('test');
-      console.log(Array.isArray(annos.rows))
-      console.log(annos);
       let formattedAnnos = [];
       annos.rows.forEach((anno) => formattedAnnos.push(this.formatAnnotation(anno)));
       if (Array.isArray(formattedAnnos)) {
-        console.log('yup');
         return {
           id: this.annotationPageId,
           items: formattedAnnos,
@@ -214,8 +181,6 @@ export default class CatchPyAdapter {
       }
       return annos;
     }
-
-
 
   }
   
