@@ -67,7 +67,6 @@ export default class CatchPyAdapter {
     }
   
     async create(annotation) {
-      console.log(annotation);
       return fetch(`${this.endpointUrl}/annos/`, {
         body: JSON.stringify(this.createPayload(annotation)),
         headers: {
@@ -77,7 +76,6 @@ export default class CatchPyAdapter {
         },
         method: 'POST',
       })
-      .then((response) => console.log(response))
       .then((response) => this.all())
       .catch(() => this.all());
     }

@@ -5,9 +5,22 @@ import LocalStorageAdapter from '../../src/LocalStorageAdapter';
 import AnnototAdapter from '../../src/AnnototAdapter';
 import CatchPyAdapter from '../../src/CatchPyAdapter';
 
-// const endpointUrl = 'http://127.0.0.1:3000/annotations';
+var jwt = require('jsonwebtoken');
 
-let jwt_local = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImxvY2FsQXBwIiwidXNlcklkIjoiY29sZV9jcmF3Zm9yZCIsImlzc3VlZEF0IjoiMjAyMS0wOS0xN1QyMDo1NzoyMy4xNjQyMDQrMDA6MDAiLCJ0dGwiOjUwMDAwLCJvdmVycmlkZSI6W119.R14vP__Cm-Owx7_RK90OsyxN_nhY8SkC0rYwYz4OqDc';
+function make_jwt(apikey, secret, user_id=null, ttl=3600){
+  var date = new Date();
+  return jwt.sign({
+    "consumerKey": apikey,
+    "userId": user_id,
+    "ttl": ttl,
+    "issuedAt": date.toISOString()
+  }, secret, { expiresIn: ttl })
+}
+var token = make_jwt("localApp", "colessecretstring", "cole_crawford");
+
+// const endpointUrl = 'http://127.0.0.1:3000/annotations';
+// let token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb25zdW1lcktleSI6ImxvY2FsQXBwIiwidXNlcklkIjoiY29sZV9jcmF3Zm9yZCIsImlzc3VlZEF0IjoiMjAyMS0wOS0xN1QyMDo1NzoyMy4xNjQyMDQrMDA6MDAiLCJ0dGwiOjUwMDAwLCJvdmVycmlkZSI6W119.R14vP__Cm-Owx7_RK90OsyxN_nhY8SkC0rYwYz4OqDc';
+
 const config = {
   annotation: {
     // adapter: (canvasId) => new AnnototAdapter(canvasId, endpointUrl),
@@ -19,7 +32,7 @@ const config = {
       'localApp',
       '1',
       '1',
-      jwt_local
+      token
     ),
     // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
 
