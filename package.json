@@ -6,9 +6,9 @@
   "module": "es/index.js",
   "files": [
     "css",
-    "es",
-    "lib",
-    "umd"
+    "es/*",
+    "lib/*",
+    "umd/*"
   ],
   "scripts": {
     "build": "nwb build-react-component",
