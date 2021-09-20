@@ -19,7 +19,8 @@
     "test": "npm run lint && jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@psychobolt/react-paperjs": "^1.0.0",
