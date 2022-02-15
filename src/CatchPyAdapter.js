@@ -2,7 +2,7 @@
 
 export default class CatchPyAdapter {
     /** */
-    constructor(canvasId, endpointUrl, userId, userName, platformName, contextId, collectionId, jwt, context="http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json", schemaVersion="1.2.0") {
+    constructor({jwt, canvasId, endpointUrl, platformName, objectId="1", contextId="1", collectionId="1", workId="1", userId="", userName="", context="http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json", schemaVersion="1.2.0"} = {}) {
       this.canvasId = canvasId;
       this.endpointUrl = endpointUrl;
       this.jwt = jwt;
@@ -13,6 +13,8 @@ export default class CatchPyAdapter {
       this.collectionId = collectionId;
       this.context = context;
       this.schemaVersion = schemaVersion;
+      this.objectId = objectId;
+      this.workId = workId
     }
   
     get annotationPageId() {
@@ -39,7 +41,9 @@ export default class CatchPyAdapter {
           "platform_name": this.platformName,   
           "context_id": this.contextId,  
           "collection_id": this.collectionId,
-          "target_source_id": this.canvasId
+          "target_source_id": this.canvasId,
+          "object_id": this.objectId,
+          "work_id": this.workId
         },
         "body": {
           "type": "List",
