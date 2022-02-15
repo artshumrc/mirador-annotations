@@ -34,6 +34,7 @@ const config = {
       '1',
       token
     ),
+    hideAddAnnotationButton: false,
     // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
 
     exportLocalStorageAnnotations: false, // display annotation JSON export button
