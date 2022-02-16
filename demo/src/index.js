@@ -24,15 +24,18 @@ var token = make_jwt("localApp", "colessecretstring", "cole_crawford");
 const config = {
   annotation: {
     // adapter: (canvasId) => new AnnototAdapter(canvasId, endpointUrl),
-    adapter: (canvasId) => new CatchPyAdapter(
-      canvasId,
-      'http://localhost:8000',
-      'cole_crawford',
-      'Cole Crawford',
-      'localApp',
-      '1',
-      '1',
-      token
+    adapter: (canvasId) => new CatchPyAdapter({
+      jwt: token,
+      canvasId: canvasId,
+      endpointUrl: 'http://localhost:8000/catchpy',
+      objectId: "abc123-def456",
+      contextId: "asdfg",
+      collectionId: "collectionided",
+      workId: "Friday",
+      userId: "cole_crawford",
+      userName: "Cole Crawford",
+      platformName: "localApp"
+    }
     ),
     hideAddAnnotationButton: false,
     // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
