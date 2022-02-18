@@ -2,7 +2,7 @@
 
 export default class CatchPyAdapter {
     /** */
-    constructor({jwt, canvasId, endpointUrl, platformName, objectId="1", contextId="1", collectionId="1", workId="1", userId="", userName="", context="http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json", schemaVersion="1.2.0"} = {}) {
+    constructor({jwt, canvasId, endpointUrl, platformName, contextId="1", collectionId="1", userId="", userName="", extra=[], context="http://catchpy.harvardx.harvard.edu.s3.amazonaws.com/jsonld/catch_context_jsonld.json", schemaVersion="1.2.0"} = {}) {
       this.canvasId = canvasId;
       this.endpointUrl = endpointUrl;
       this.jwt = jwt;
@@ -13,8 +13,15 @@ export default class CatchPyAdapter {
       this.collectionId = collectionId;
       this.context = context;
       this.schemaVersion = schemaVersion;
-      this.objectId = objectId;
-      this.workId = workId
+      this.extra = extra;
+      // extra is an array of objects with "name" and "value" properties - easy way to store additional data your application needs but CatchPy doesn't care about
+      // no good filtering for that currently implemented
+      // "extra": [
+      //   {
+      //    "name": "extra1",
+      //    "value": "value1"
+      //   }
+      // ]
     }
   
     get annotationPageId() {
@@ -42,8 +49,7 @@ export default class CatchPyAdapter {
           "context_id": this.contextId,  
           "collection_id": this.collectionId,
           "target_source_id": this.canvasId,
-          "object_id": this.objectId,
-          "work_id": this.workId
+          "extra": this.extra
         },
         "body": {
           "type": "List",

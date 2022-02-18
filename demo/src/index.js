@@ -28,15 +28,22 @@ const config = {
       jwt: token,
       canvasId: canvasId,
       endpointUrl: 'http://localhost:8000/catchpy',
-      objectId: "abc123-def456",
       contextId: "asdfg",
       collectionId: "collectionided",
-      workId: "Friday",
       userId: "cole_crawford",
       userName: "Cole Crawford",
-      platformName: "localApp"
-    }
-    ),
+      platformName: "localApp",
+      extra: [
+        {
+          "name": "workId",
+          "value": "Friday"
+        },
+        {
+          "name": "objectId",
+          "value": "abc123-def456"
+        }
+      ]
+    }),
     hideAddAnnotationButton: false,
     // adapter: (canvasId) => new LocalStorageAdapter(`localStorage://?canvasId=${canvasId}`),
 
