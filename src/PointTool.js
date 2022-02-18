@@ -17,7 +17,7 @@ class PointTool extends Component {
     onMouseUp(e){
         const { onPathAdd, pathProps, paper } = this.props;
         const { project } = paper;
-        const { Path, Point, CompoundPath } = paper;
+        const { Path, Point, CompoundPath, Segment } = paper;
 
         // Pin path
         console.log(e.point);
@@ -25,24 +25,18 @@ class PointTool extends Component {
         var top = new Point(e.point.x, e.point.y - 50)
         var arcFrom = new Point(top.x - 20, top.y + 20)
         var arcTo = new Point(top.x + 20, top.y + 20)
-        var arc = new Path.Arc(arcFrom, top, arcTo)
-        var leftLine = new Path.Line(arcFrom, bottom)
-        var rightLine = new Path.Line(arcTo, bottom)
-        
-        var path = new CompoundPath({
-          children: [
-            arc,
-            leftLine,
-            rightLine
-          ],
-          strokeColor: pathProps.strokeColor,
-          fillColor: pathProps.fillColor,
-          strokeWidth: pathProps.strokeWidth
-        })
+        var handleIn = new Point(-20, 0);
+        var handleOut = new Point(20, 0);
 
-        // need to flatten this so it can be edited and doesn't fill in the arc
-        // path.flatten(0);
-        path.smooth();
+        var path = new Path();
+        path.add(bottom);
+        path.add(arcFrom);
+        path.add(new Segment(top, handleIn, handleOut));
+        path.add(arcTo);
+        path.strokeColor = pathProps.strokeColor;
+        path.strokeWidth = pathProps.strokeWidth;
+        path.fillColor = pathProps.fillColor;
+
         onPathAdd(path);
     }
 
