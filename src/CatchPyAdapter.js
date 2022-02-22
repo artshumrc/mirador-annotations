@@ -49,7 +49,7 @@ export default class CatchPyAdapter {
           "context_id": this.contextId,  
           "collection_id": this.collectionId,
           "target_source_id": this.canvasId,
-          "extra": this.extra
+          "extra": annotation.extra // Need to create this from anno data, not constructor data
         },
         "body": {
           "type": "List",

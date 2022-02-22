@@ -176,7 +176,7 @@ class AnnotationCreation extends Component {
     const {
       annoBody, tags, xywh, svg, textEditorStateBustingKey, visibleColorSelectedUuid, analysisMethodologySelectedUuid
     } = this.state;
-    let extra = [
+    const extraMCIH = [
       {
         "name": "visibleColorId",
         "value": visibleColorSelectedUuid
@@ -193,11 +193,13 @@ class AnnotationCreation extends Component {
         canvasId: canvas.id,
         id: (annotation && annotation.id) || `${uuid()}`,
         manifestId: canvas.options.resource.id,
-        extra: extra,
+        extra: extraMCIH,
         svg,
         tags,
         xywh,
       }).toJson();
+      console.log("------ Annotation: --------");
+      console.log(anno);
       /** looks like:
        * {
           "body": {

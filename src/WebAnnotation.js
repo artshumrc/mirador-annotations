@@ -22,7 +22,7 @@ export default class WebAnnotation {
       motivation: 'commenting',
       target: this.target(),
       type: 'Annotation',
-      extra: extra
+      extra: this.extra
     };
   }
 
