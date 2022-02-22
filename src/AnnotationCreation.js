@@ -29,6 +29,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CompanionWindow from 'mirador/dist/es/src/containers/CompanionWindow';
 import AnnotationDrawing from './AnnotationDrawing';
 import TextEditor from './TextEditor';
+import CatchPyDataEditor from './CatchPyDataEditor';
 import WebAnnotation from './WebAnnotation';
 import CursorIcon from './icons/Cursor';
 
@@ -368,6 +369,16 @@ class AnnotationCreation extends Component {
                 annoHtml={annoBody}
                 updateAnnotationBody={this.updateBody}
               />
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              <Typography variant="overline">
+                MCIH Data
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <CatchPyDataEditor />
             </Grid>
           </Grid>
           <Button onClick={closeCompanionWindow}>
