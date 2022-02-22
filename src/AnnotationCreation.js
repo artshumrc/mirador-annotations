@@ -200,30 +200,7 @@ class AnnotationCreation extends Component {
       }).toJson();
       console.log("------ Annotation: --------");
       console.log(anno);
-      /** looks like:
-       * {
-          "body": {
-              "type": "TextualBody",
-              "value": "<p>random anno</p>"
-          },
-          "id": "400604e0-7f4e-4e1f-a357-62c57b08bce8",
-          "motivation": "commenting",
-          "target": {
-              "source": "https://iiif.harvardartmuseums.org/manifests/object/195903/canvas/canvas-20411130",
-              "selector": [
-                  {
-                      "type": "FragmentSelector",
-                      "value": "xywh=1029,143,267,260"
-                  },
-                  {
-                      "type": "SvgSelector",
-                      "value": "<svg xmlns='http://www.w3.org/2000/svg'><path xmlns=\"http://www.w3.org/2000/svg\" d=\"M1029.83923,273.78457c0,-72.00124 59.83693,-130.36977 133.64952,-130.36977c73.81259,0 133.64952,58.36854 133.64952,130.36977c0,72.00124 -59.83693,130.36977 -133.64952,130.36977c-73.81259,0 -133.64952,-58.36854 -133.64952,-130.36977z\" data-paper-data=\"{&quot;state&quot;:null}\" fill=\"none\" fill-rule=\"nonzero\" stroke=\"#00bfff\" stroke-width=\"3\" stroke-linecap=\"butt\" stroke-linejoin=\"miter\" stroke-miterlimit=\"10\" stroke-dasharray=\"\" stroke-dashoffset=\"0\" font-family=\"none\" font-weight=\"none\" font-size=\"none\" text-anchor=\"none\" style=\"mix-blend-mode: normal\"/></svg>"
-                  }
-              ]
-          },
-          "type": "Annotation"
-      }
-       */
+
       if (annotation) {
         storageAdapter.update(anno).then((annoPage) => {
           receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);

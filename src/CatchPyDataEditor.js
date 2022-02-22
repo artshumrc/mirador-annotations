@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-// import ToggleButton from '@material-ui/lab/ToggleButton';
-// import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import PropTypes from 'prop-types';
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-// import { getAnalysisData } from './getAnalysisData';
 
 /** */
 class CatchPyDataEditor extends Component {
@@ -14,22 +11,12 @@ class CatchPyDataEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // data: getAnalysisData(),
-      // visibleColorSelectedUuid: null,
-      // analysisMethodologySelectedUuid: null
       data: this.props.analysisData,
       visibleColorSelectedUuid: this.props.visibleColorSelectedUuid,
       analysisMethodologySelectedUuid: this.props.analysisMethodologySelectedUuid
     }
     this.handleVisibleColorChange = this.handleVisibleColorChange.bind(this);
     this.handleAnalysisMethodologyChange = this.handleAnalysisMethodologyChange.bind(this);
-
-    // this.state = {
-    //   editorState: EditorState.createWithContent(stateFromHTML(props.annoHtml)),
-    // };
-    // this.onChange = this.onChange.bind(this);
-    // this.handleKeyCommand = this.handleKeyCommand.bind(this);
-    // this.handleFormating = this.handleFormating.bind(this);
   }
 
   handleVisibleColorChange = event => {
@@ -38,24 +25,29 @@ class CatchPyDataEditor extends Component {
     this.setState({
       visibleColorSelectedUuid: event.target.value,
       analysisMethodologySelectedUuid: null 
+    }, () => {
+      if(updateCatchPyData){
+        updateCatchPyData({
+          visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
+          analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
+        })
+      }
     })
-    if(updateCatchPyData){
-      updateCatchPyData({
-        visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
-        analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
-      })
-    }
   }
 
   handleAnalysisMethodologyChange = event => {
-    this.setState({ analysisMethodologySelectedUuid: event.target.value })
+    console.log(event.target.value);
     const { updateCatchPyData } = this.props;
-    if(updateCatchPyData){
-      updateCatchPyData({
-        visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
-        analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
-      })
-    }
+    this.setState({
+      analysisMethodologySelectedUuid: event.target.value
+    }, () => {
+      if(updateCatchPyData){
+        updateCatchPyData({
+          visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
+          analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
+        })
+      }
+    });
   }
 
   renderVisibleColorOptions(){
@@ -95,12 +87,7 @@ class CatchPyDataEditor extends Component {
 
   }
 
-  /** */
   render() {
-    // const { classes } = this.props;
-    // const { editorState } = this.state;
-    // const currentStyle = editorState.getCurrentInlineStyle();
-
     return (
       <div>
         <FormControl fullWidth>
@@ -130,33 +117,15 @@ class CatchPyDataEditor extends Component {
   }
 }
 
-/** */
-// const styles = (theme) => ({
-//   editorRoot: {
-//     borderColor: theme.palette.type === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)',
-//     borderRadius: theme.shape.borderRadius,
-//     borderStyle: 'solid',
-//     borderWidth: 1,
-//     fontFamily: theme.typography.fontFamily,
-//     marginBottom: theme.spacing(1),
-//     marginTop: theme.spacing(1),
-//     minHeight: theme.typography.fontSize * 6,
-//     padding: theme.spacing(1),
-//   },
-// });
+CatchPyDataEditor.propTypes = {
+  analysisData: PropTypes.object,
+  visibleColorSelectedUuid: PropTypes.string,
+  analysisMethodologySelectedUuid: PropTypes.string,
+  updateCatchPyData: PropTypes.func
+}
 
-// TextEditor.propTypes = {
-//   annoHtml: PropTypes.string,
-//   classes: PropTypes.shape({
-//     editorRoot: PropTypes.string,
-//   }).isRequired,
-//   updateAnnotationBody: PropTypes.func,
-// };
+CatchPyDataEditor.defaultProps = {
 
-// TextEditor.defaultProps = {
-//   annoHtml: '',
-//   updateAnnotationBody: () => {},
-// };
+}
 
-// export default withStyles(styles)(TextEditor);
 export default CatchPyDataEditor;
