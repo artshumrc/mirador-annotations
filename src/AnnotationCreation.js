@@ -33,7 +33,7 @@ import CatchPyDataEditor from './CatchPyDataEditor';
 import WebAnnotation from './WebAnnotation';
 import CursorIcon from './icons/Cursor';
 
-import { getAnalysisData } from './getAnalysisData';
+import { getAnalysisData } from './getAnalysisDummyData';
 
 
 /** */
