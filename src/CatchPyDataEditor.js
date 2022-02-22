@@ -1,100 +1,12 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-// import { Editor, EditorState, RichUtils } from 'draft-js';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+// import PropTypes from 'prop-types';
+// import ToggleButton from '@material-ui/lab/ToggleButton';
+// import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import { getAnalysisData } from './getAnalysisData';
-// import BoldIcon from '@material-ui/icons/FormatBold';
-// import ItalicIcon from '@material-ui/icons/FormatItalic';
-// import { withStyles } from '@material-ui/core/styles';
-// import { stateToHTML } from 'draft-js-export-html';
-// import { stateFromHTML } from 'draft-js-import-html';
-
-// Sample data response from MCIH
-// Need to map each visibleColorSet item to a visibleColor and an analysisMethodology
-// VisibleColor: `${color.name} ($all items in visibleColorPigmentSet)`
-// {
-//   "data": {
-//     "analysisByUuid": {
-//       "uuid": "0b48ba14-8ca6-49a7-9eb7-0f0a321b5128",
-//       "description": "Harvard pigment study",
-//       "visiblecolorSet": [
-//         {
-//           "description": "In South Asian material, organic red is likely to be madder or lac dye.",
-//           "color": {
-//             "name": "Pink",
-//             "hexCode": "D1548D",
-//             "hexCodeLeftGradient": "",
-//             "hexCodeRightGradient": ""
-//           },
-//           "substrate": true,
-//           "visiblecolorpigmentSet": [
-//             {
-//               "pigment": {
-//                 "name": "Lac dye"
-//               }
-//             },
-//             {
-//               "pigment": {
-//                 "name": "Vermilion"
-//               }
-//             },
-//             {
-//               "pigment": {
-//                 "name": "Lead white"
-//               }
-//             }
-//           ],
-//           "visiblecoloranalysismethodologySet": [
-//             {
-//               "locationDescription": null,
-//               "analysisPoint": "",
-//               "analysisMethodology": {
-//                 "name": "Video Spectral Comparator",
-//                 "acronym": "VSC"
-//               },
-//               "visibleColor": {
-//                 "color": {
-//                   "name": "Pink"
-//                 }
-//               }
-//             },
-//             {
-//               "locationDescription": null,
-//               "analysisPoint": "",
-//               "analysisMethodology": {
-//                 "name": "Raman Spectroscopy",
-//                 "acronym": "Raman"
-//               },
-//               "visibleColor": {
-//                 "color": {
-//                   "name": "Pink"
-//                 }
-//               }
-//             },
-//             {
-//               "locationDescription": null,
-//               "analysisPoint": "",
-//               "analysisMethodology": {
-//                 "name": "X-ray Fluorescence",
-//                 "acronym": "XRF"
-//               },
-//               "visibleColor": {
-//                 "color": {
-//                   "name": "Pink"
-//                 }
-//               }
-//             }
-//           ]
-//         },
-//       ]
-//     }
-//   }
-// }
 
 /** */
 class CatchPyDataEditor extends Component {
@@ -103,9 +15,12 @@ class CatchPyDataEditor extends Component {
     super(props);
     this.state = {
       data: getAnalysisData(),
-      visibleColorSelected: null,
-      analysisMethodologySelected: null
+      visibleColorSelectedUuid: null,
+      analysisMethodologySelectedUuid: null
     }
+    this.handleVisibleColorChange = this.handleVisibleColorChange.bind(this);
+    this.handleAnalysisMethodologyChange = this.handleAnalysisMethodologyChange.bind(this);
+
     // this.state = {
     //   editorState: EditorState.createWithContent(stateFromHTML(props.annoHtml)),
     // };
@@ -115,44 +30,53 @@ class CatchPyDataEditor extends Component {
   }
 
   handleVisibleColorChange = event => {
-    this.setState({ visibleColorSelected: event.target.value })
+    console.log(event.target.value);
+    this.setState({
+      visibleColorSelectedUuid: event.target.value,
+      analysisMethodologySelectedUuid: null 
+    })
   }
 
-  // handleAnalysisMethodologyChange = event => {
-  //   this.setState({ analysisMethodologySelected: event.target.value })
-  // }
+  handleAnalysisMethodologyChange = event => {
+    this.setState({ analysisMethodologySelectedUuid: event.target.value })
+  }
 
   renderVisibleColorOptions(){
     return this.state.data.data.analysisByUuid.visiblecolorSet.map((vc, i) => {
+      let pigments = vc.visiblecolorpigmentSet.map((p) => {
+        return p.pigment.name
+      }).join(", ");
       return (
         <MenuItem
           label="Select a Visible Color"
-          value={vc.color.name} // This should be uuid
+          value={vc.uuid}
           key={i}
           name={vc.color.name}
-        >{ vc.color.name }</MenuItem>
+        >{ vc.color.name } ({ pigments})</MenuItem>
       )
     })
   }
 
-  // renderAnalysisMethodologyOptions(){
-  //   return this.state.data.data.analysisByUuid.visiblecolorSet
-  // }
+  renderAnalysisMethodologyOptions(){
+    if(this.state.visibleColorSelectedUuid){
+      let selectedVisibleColor = this.state.data.data.analysisByUuid.visiblecolorSet.find((vc) => {
+        return vc.uuid == this.state.visibleColorSelectedUuid;
+      });
+      return selectedVisibleColor.visiblecoloranalysismethodologySet.map((m, i) => {
+        return (
+          <MenuItem
+            label="Select a Methodology"
+            value={m.uuid}
+            key={i}
+            name={m.analysisMethodology.name}
+          >{m.analysisMethodology.name}</MenuItem>
+        )
+      })
+    } else {
+      return [];
+    }
 
-  /** */
-  // onChange(editorState) {
-  //   const { updateAnnotationBody } = this.props;
-  //   this.setState({ editorState });
-  //   if (updateAnnotationBody) {
-  //     const options = {
-  //       inlineStyles: {
-  //         BOLD: { element: 'b' },
-  //         ITALIC: { element: 'i' },
-  //       },
-  //     };
-  //     updateAnnotationBody(stateToHTML(editorState.getCurrentContent(), options).toString());
-  //   }
-  // }
+  }
 
   /** */
   render() {
@@ -167,17 +91,22 @@ class CatchPyDataEditor extends Component {
           <Select
             id="visible-color-select"
             label="Visible Color Select"
-            value={ this.state.visibleColorSelected }
-            onChange={ this.handleVisibleColorChange}
+            value={ this.state.visibleColorSelectedUuid }
+            onChange={ this.handleVisibleColorChange }
           >
             { this.renderVisibleColorOptions() }
           </Select>
-          <Select
-            id=""
-            lable=""
-          >
-
-          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="analysis-methodology-select-label">Analysis Methodology</InputLabel>
+            <Select
+              id="analysis-methodology-select"
+              label="Analysis Methodology Select"
+              value={ this.state.analysisMethodologySelectedUuid}
+              onChange={ this.handleAnalysisMethodologyChange }
+            >
+              { this.renderAnalysisMethodologyOptions() }
+            </Select>
         </FormControl>
       </div>
     );
