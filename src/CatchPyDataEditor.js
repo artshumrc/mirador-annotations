@@ -6,7 +6,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
-import { getAnalysisData } from './getAnalysisData';
+// import { getAnalysisData } from './getAnalysisData';
 
 /** */
 class CatchPyDataEditor extends Component {
@@ -14,9 +14,12 @@ class CatchPyDataEditor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: getAnalysisData(),
-      visibleColorSelectedUuid: null,
-      analysisMethodologySelectedUuid: null
+      // data: getAnalysisData(),
+      // visibleColorSelectedUuid: null,
+      // analysisMethodologySelectedUuid: null
+      data: this.props.data,
+      visibleColorSelectedUuid: this.props.visibleColorSelectedUuid,
+      analysisMethodologySelectedUuid: this.props.analysisMethodologySelectedUuid
     }
     this.handleVisibleColorChange = this.handleVisibleColorChange.bind(this);
     this.handleAnalysisMethodologyChange = this.handleAnalysisMethodologyChange.bind(this);

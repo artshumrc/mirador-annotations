@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -33,6 +33,9 @@ import CatchPyDataEditor from './CatchPyDataEditor';
 import WebAnnotation from './WebAnnotation';
 import CursorIcon from './icons/Cursor';
 
+import { getAnalysisData } from './getAnalysisData';
+
+
 /** */
 class AnnotationCreation extends Component {
   /** */
@@ -64,6 +67,10 @@ class AnnotationCreation extends Component {
         } else {
           annoState.svg = props.annotation.target.selector.value;
         }
+      }
+      // CatchPy
+      if(props.annotation.extra){
+        annoState.extra = props.annotation.extra;
       }
     }
 
@@ -161,7 +168,7 @@ class AnnotationCreation extends Component {
       annotation, canvases, receiveAnnotation, config,
     } = this.props;
     const {
-      annoBody, tags, xywh, svg, textEditorStateBustingKey,
+      annoBody, tags, xywh, svg, textEditorStateBustingKey, extra
     } = this.state;
     canvases.forEach((canvas) => {
       const storageAdapter = config.annotation.adapter(canvas.id);
@@ -170,10 +177,35 @@ class AnnotationCreation extends Component {
         canvasId: canvas.id,
         id: (annotation && annotation.id) || `${uuid()}`,
         manifestId: canvas.options.resource.id,
+        extra: extra,
         svg,
         tags,
         xywh,
       }).toJson();
+      /** looks like:
+       * {
+          "body": {
+              "type": "TextualBody",
+              "value": "<p>random anno</p>"
+          },
+          "id": "400604e0-7f4e-4e1f-a357-62c57b08bce8",
+          "motivation": "commenting",
+          "target": {
+              "source": "https://iiif.harvardartmuseums.org/manifests/object/195903/canvas/canvas-20411130",
+              "selector": [
+                  {
+                      "type": "FragmentSelector",
+                      "value": "xywh=1029,143,267,260"
+                  },
+                  {
+                      "type": "SvgSelector",
+                      "value": "<svg xmlns='http://www.w3.org/2000/svg'><path xmlns=\"http://www.w3.org/2000/svg\" d=\"M1029.83923,273.78457c0,-72.00124 59.83693,-130.36977 133.64952,-130.36977c73.81259,0 133.64952,58.36854 133.64952,130.36977c0,72.00124 -59.83693,130.36977 -133.64952,130.36977c-73.81259,0 -133.64952,-58.36854 -133.64952,-130.36977z\" data-paper-data=\"{&quot;state&quot;:null}\" fill=\"none\" fill-rule=\"nonzero\" stroke=\"#00bfff\" stroke-width=\"3\" stroke-linecap=\"butt\" stroke-linejoin=\"miter\" stroke-miterlimit=\"10\" stroke-dasharray=\"\" stroke-dashoffset=\"0\" font-family=\"none\" font-weight=\"none\" font-size=\"none\" text-anchor=\"none\" style=\"mix-blend-mode: normal\"/></svg>"
+                  }
+              ]
+          },
+          "type": "Annotation"
+      }
+       */
       if (annotation) {
         storageAdapter.update(anno).then((annoPage) => {
           receiveAnnotation(canvas.id, storageAdapter.annotationPageId, annoPage);
@@ -230,6 +262,8 @@ class AnnotationCreation extends Component {
       popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
       textEditorStateBustingKey,
     } = this.state;
+
+    // const [catchPyDataEditorData, setCatchPyDataEditorData] = useState("");
     return (
       <CompanionWindow
         title={annotation ? 'Edit annotation' : 'New annotation'}
@@ -378,7 +412,12 @@ class AnnotationCreation extends Component {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <CatchPyDataEditor />
+              <CatchPyDataEditor 
+                // passCatchPyDataEditorData={setCatchPyDataEditorData}
+                data={getAnalysisData()}
+                visibleColorSelectedUuid={null}
+                analysisMethodologySelectedUuid={null}
+              />
             </Grid>
           </Grid>
           <Button onClick={closeCompanionWindow}>
