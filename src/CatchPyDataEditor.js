@@ -17,7 +17,7 @@ class CatchPyDataEditor extends Component {
       // data: getAnalysisData(),
       // visibleColorSelectedUuid: null,
       // analysisMethodologySelectedUuid: null
-      data: this.props.data,
+      data: this.props.analysisData,
       visibleColorSelectedUuid: this.props.visibleColorSelectedUuid,
       analysisMethodologySelectedUuid: this.props.analysisMethodologySelectedUuid
     }
@@ -34,14 +34,28 @@ class CatchPyDataEditor extends Component {
 
   handleVisibleColorChange = event => {
     console.log(event.target.value);
+    const { updateCatchPyData } = this.props;
     this.setState({
       visibleColorSelectedUuid: event.target.value,
       analysisMethodologySelectedUuid: null 
     })
+    if(updateCatchPyData){
+      updateCatchPyData({
+        visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
+        analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
+      })
+    }
   }
 
   handleAnalysisMethodologyChange = event => {
     this.setState({ analysisMethodologySelectedUuid: event.target.value })
+    const { updateCatchPyData } = this.props;
+    if(updateCatchPyData){
+      updateCatchPyData({
+        visibleColorSelectedUuid: this.state.visibleColorSelectedUuid,
+        analysisMethodologySelectedUuid: this.state.analysisMethodologySelectedUuid
+      })
+    }
   }
 
   renderVisibleColorOptions(){

@@ -2,7 +2,7 @@
 export default class WebAnnotation {
   /** */
   constructor({
-    canvasId, id, xywh, body, tags, svg, manifestId,
+    canvasId, id, xywh, body, tags, svg, manifestId, extra=[]
   }) {
     this.id = id;
     this.canvasId = canvasId;
@@ -11,6 +11,7 @@ export default class WebAnnotation {
     this.tags = tags;
     this.svg = svg;
     this.manifestId = manifestId;
+    this.extra = extra;
   }
 
   /** */
@@ -21,6 +22,7 @@ export default class WebAnnotation {
       motivation: 'commenting',
       target: this.target(),
       type: 'Annotation',
+      extra: extra
     };
   }
 

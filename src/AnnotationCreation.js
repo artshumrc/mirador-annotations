@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -70,7 +70,12 @@ class AnnotationCreation extends Component {
       }
       // CatchPy
       if(props.annotation.extra){
-        annoState.extra = props.annotation.extra;
+        // TODO need to set these for real based on data from existing annotations
+        annoState.visibleColorSelectedUuid = "";
+        annoState.analysisMethodologySelectedUuid = "";
+      } else {
+        annoState.visibleColorSelectedUuid = "";
+        annoState.analysisMethodologySelectedUuid = "";
       }
     }
 
@@ -108,6 +113,7 @@ class AnnotationCreation extends Component {
     this.handleCloseLineWeight = this.handleCloseLineWeight.bind(this);
     this.closeChooseColor = this.closeChooseColor.bind(this);
     this.updateStrokeColor = this.updateStrokeColor.bind(this);
+    this.updateCatchPyData = this.updateCatchPyData.bind(this);
   }
 
   /** */
@@ -168,8 +174,18 @@ class AnnotationCreation extends Component {
       annotation, canvases, receiveAnnotation, config,
     } = this.props;
     const {
-      annoBody, tags, xywh, svg, textEditorStateBustingKey, extra
+      annoBody, tags, xywh, svg, textEditorStateBustingKey, visibleColorSelectedUuid, analysisMethodologySelectedUuid
     } = this.state;
+    let extra = [
+      {
+        "name": "visibleColorId",
+        "value": visibleColorSelectedUuid
+      },
+      {
+        "name": "analysisMethodologyId",
+        "value": analysisMethodologySelectedUuid
+      }
+    ];
     canvases.forEach((canvas) => {
       const storageAdapter = config.annotation.adapter(canvas.id);
       const anno = new WebAnnotation({
@@ -251,6 +267,12 @@ class AnnotationCreation extends Component {
     });
   }
 
+  updateCatchPyData({ visibleColorSelectedUuid, analysisMethodologySelectedUuid}) {
+    this.setState({
+      visibleColorSelectedUuid, analysisMethodologySelectedUuid
+    })
+  }
+
   /** */
   render() {
     const {
@@ -260,10 +282,9 @@ class AnnotationCreation extends Component {
     const {
       activeTool, colorPopoverOpen, currentColorType, fillColor, popoverAnchorEl, strokeColor,
       popoverLineWeightAnchorEl, lineWeightPopoverOpen, strokeWidth, closedMode, annoBody, svg,
-      textEditorStateBustingKey,
+      textEditorStateBustingKey, visibleColorSelectedUuid, analysisMethodologySelectedUuid
     } = this.state;
 
-    // const [catchPyDataEditorData, setCatchPyDataEditorData] = useState("");
     return (
       <CompanionWindow
         title={annotation ? 'Edit annotation' : 'New annotation'}
@@ -413,10 +434,10 @@ class AnnotationCreation extends Component {
             </Grid>
             <Grid item xs={12}>
               <CatchPyDataEditor 
-                // passCatchPyDataEditorData={setCatchPyDataEditorData}
-                data={getAnalysisData()}
-                visibleColorSelectedUuid={null}
-                analysisMethodologySelectedUuid={null}
+                analysisData={getAnalysisData()}
+                visibleColorSelectedUuid={visibleColorSelectedUuid}
+                analysisMethodologySelectedUuid={analysisMethodologySelectedUuid}
+                updateCatchPyData={this.updateCatchPyData}
               />
             </Grid>
           </Grid>
